@@ -46,8 +46,8 @@ public class Main {
             int operand1 = strToInt(operands[0]);
             int operand2 = strToInt(operands[2]);
             //Проверка систем счисления и целочисленных операндов
-            if(!match) {throw new NumeralSystemsDiffer("Системы счисления не совпадают");}
-            if(overflow) {throw new InputOverFlowNumber("Операнд вне диапазона 1..10");}
+            if(!match) {throw new NumeralSystemsDiffer("Используются одновременно разные системы счисления");}
+            if(overflow) {throw new InputOverFlowNumber("Операнд не удовлетворяет заданию вне диапазона 1..10");}
 
             int result;
             switch (operands[1]) {
@@ -55,15 +55,17 @@ public class Main {
                 case "-" -> result = operand1 - operand2;
                 case "*" -> result = operand1 * operand2;
                 case "/" -> result = operand1 / operand2;
-                default -> throw new NoOperation("Введена недопустимая операция");
+                default -> throw new NoOperation("Формат математической операции не удовлетворяет заданию");
             }
             if(rom && result < 1) {
                 throw new RomanNumNoNegative("В Римской системе отсутствуют числа меньше единицы");
             } else {
                 return "" + result;
             }
+        } else if(operands.length < 3)  {
+            throw new IncorrectInput("Строка не является математической операцией");
         } else {
-            throw new IncorrectInput("Неверный порядок ввода операндов,действий");
+            throw new IncorrectInput("Формат математической операции не удовлетворяет заданию - два операнда и один оператор (+, -, /, *)");
         }
     }
 
