@@ -57,12 +57,15 @@ public class Main {
                 case "/" -> result = operand1 / operand2;
                 default -> throw new NoOperation("Формат математической операции не удовлетворяет заданию");
             }
-            if(rom && result < 1) {
-                throw new RomanNumNoNegative("В Римской системе отсутствуют числа меньше единицы");
+            if(rom) {
+                if(result < 1) {
+                    throw new RomanNumNoNegative("В Римской системе отсутствуют числа меньше единицы");
+                }
+                return intToRom(result); //Вывод римских чисел
             } else {
-                return "" + result;
+                return String.valueOf(result); //Вывод арабских чисел
             }
-        } else if(operands.length < 3)  {
+        } else if(operands.length < 3) {
             throw new IncorrectInput("Строка не является математической операцией");
         } else {
             throw new IncorrectInput("Формат математической операции не удовлетворяет заданию - два операнда и один оператор (+, -, /, *)");
@@ -97,5 +100,17 @@ public class Main {
             overflow = true;
         }
         return a;
+    }
+
+    private static String intToRom(int number) {
+        /*Результат по условию не может быть больше 100,
+        поэтому применяем упрощенный алгоритм перевода арабских чисел в римские*/
+        String str;
+        String [] arrEd = {"", "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX"};
+        String [] arrDec = {"", "X", "XX", "XXX", "XL", "L", "LX", "LXX", "LXXX", "XC", "C"};
+        int a = number / 10;
+        int b = number % 10;
+        str =  arrDec[a] + arrEd[b];
+        return str;
     }
 }
