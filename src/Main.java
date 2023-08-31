@@ -7,7 +7,12 @@ public class Main {
     private static boolean rom = true; // Если римская система чисел
     private static boolean overflow = false; // Если операнд не в диапазоне 1..10
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws
+            NumeralSystemsDiffer,
+            InputOverFlowNumber,
+            RomanNumNoNegative,
+            IncorrectInput,
+            NoOperation {
         String input;
         Scanner scanner = new Scanner(System.in);
         while (true) {
@@ -26,38 +31,49 @@ public class Main {
         }
     }
 
-    public static  String calc(String input) {
+    public static  String calc(String input) throws
+            NumeralSystemsDiffer,
+            InputOverFlowNumber,
+            RomanNumNoNegative,
+            IncorrectInput,
+            NoOperation {
         //Формируем массив String из строки, должно быть два операнда и знак действия
         String [] operands = input.split(" ");
-        int result;
-
-        // Преобразуем операнды String в int
-        int operand1 = strToInt(operands[0]);
-        int operand2 = strToInt(operands[2]);
 
         // Если соблюдаются все условия выбираем действие
-        if(operands.length == 3 && match && !overflow) {
+        if(operands.length == 3) {
+            // Преобразуем операнды String в int
+            int operand1 = strToInt(operands[0]);
+            int operand2 = strToInt(operands[2]);
+            //Проверка систем счисления и целочисленных операндов
+            if(!match) {throw new NumeralSystemsDiffer("Системы счисления не совпадают");}
+            if(overflow) {throw new InputOverFlowNumber("Операнд вне диапазона 1..10");}
+
+            int result;
             switch (operands[1]) {
                 case "+" -> result = operand1 + operand2;
                 case "-" -> result = operand1 - operand2;
                 case "*" -> result = operand1 * operand2;
                 case "/" -> result = operand1 / operand2;
                 default -> {
-                    return "throw Exeption";
+                    //throw Exeption
+                    throw new NoOperation("Введена недопустимая операция");
                 }
             }
-            if(rom && result < 0) {
-                return "throw Exeption";
+            if(rom && result < 1) {
+                //throw Exeption
+                throw new RomanNumNoNegative("В Римской системе отсутствуют числа меньше единицы");
             } else {
                 return "" + result;
             }
         } else {
-            return "throw Exeption";
+            //throw Exeption
+            throw new IncorrectInput("Неверный порядок ввода операндов,действий");
         }
     }
 
-    private static int strToInt(String operand) {
-        int a;
+    private static int strToInt(String operand) throws IncorrectInput {
+        int a = 0;
         switch (operand) {
             case "I"  -> a = 1;
             case "II" -> a = 2;
@@ -70,13 +86,18 @@ public class Main {
             case "IX" -> a = 9;
             case "X" -> a = 10;
             default -> {
-                a = Integer.parseInt(operand);
+                try {
+                    a = Integer.parseInt(operand);
+                } catch (RuntimeException e) {
+                    //throw Exeption
+                    throw new IncorrectInput("Неверный операнд");
+                }
                 match = !match;
                 rom = false;
             }
         }
         // Проверка операнда
-        if(a < 0 || a > 10) {
+        if(a < 1 || a > 10) {
             overflow = true;
         }
         return a;
