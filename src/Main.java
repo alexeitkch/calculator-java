@@ -31,7 +31,7 @@ public class Main {
         }
     }
 
-    public static  String calc(String input) throws
+    private static  String calc(String input) throws
             NumeralSystemsDiffer,
             InputOverFlowNumber,
             RomanNumNoNegative,
@@ -55,25 +55,20 @@ public class Main {
                 case "-" -> result = operand1 - operand2;
                 case "*" -> result = operand1 * operand2;
                 case "/" -> result = operand1 / operand2;
-                default -> {
-                    //throw Exeption
-                    throw new NoOperation("Введена недопустимая операция");
-                }
+                default -> throw new NoOperation("Введена недопустимая операция");
             }
             if(rom && result < 1) {
-                //throw Exeption
                 throw new RomanNumNoNegative("В Римской системе отсутствуют числа меньше единицы");
             } else {
                 return "" + result;
             }
         } else {
-            //throw Exeption
             throw new IncorrectInput("Неверный порядок ввода операндов,действий");
         }
     }
 
     private static int strToInt(String operand) throws IncorrectInput {
-        int a = 0;
+        int a;
         switch (operand) {
             case "I"  -> a = 1;
             case "II" -> a = 2;
@@ -89,7 +84,6 @@ public class Main {
                 try {
                     a = Integer.parseInt(operand);
                 } catch (RuntimeException e) {
-                    //throw Exeption
                     throw new IncorrectInput("Неверный операнд");
                 }
                 match = !match;
